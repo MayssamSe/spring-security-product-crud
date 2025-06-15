@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="layout1"
+
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<div class="p-3" layout:fragment="content1">
+  <div class="p-3" sec:authorize="hasRole('ADMIN')">
+    <a class="btn btn-primary" th:href="@{/admin/newProduct}">New Product</a>
+  </div>
+  <form method="get" th:action="@{/user/search}" class="d-flex mb-3">
+    <input class="form-control me-2" type="search" name="keyword" placeholder="Rechercher un produit">
+    <button class="btn btn-outline-success" type="submit">Rechercher</button>
+  </form>
+
+  <table class="table">
+    <thead>
+    <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th>
+    </thead>
+    <tbody>
+    <tr th:each="p:${productsList}">
+      <td th:text="${p.id}"></td>
+      <td th:text="${p.name}"></td>
+      <td th:text="${p.price}"></td>
+      <td th:text="${p.quantity}"></td>
+      <td sec:authorize="hasRole('ADMIN')">
+        <form method="get" th:action="@{/admin/editProduct}" style="display:inline">
+          <input type="hidden" name="id" th:value="${p.id}" />
+          <button type="submit" class="btn btn-success btn-sm me-1">Edit</button>
+        </form>
+        <form method="post" th:action="@{/admin/delete(id=${p.id})}" style="display:inline">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </td>
+
+
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
